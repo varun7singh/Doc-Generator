@@ -18,7 +18,6 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "strictPropertyInitialization": false,
     "strict": true
   },
   "exclude": ["node_modules"]

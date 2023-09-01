@@ -30,25 +30,5 @@ CREATE TABLE "Batch" (
     CONSTRAINT "Batch_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
-CREATE TABLE "User" (
-    "id" SERIAL NOT NULL,
-    "username" TEXT NOT NULL,
-    "firstName" TEXT NOT NULL,
-    "lastName" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "password" TEXT NOT NULL,
-    "phone" TEXT NOT NULL,
-    "userStatus" INTEGER NOT NULL,
-
-    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
-);
-
--- CreateIndex
-CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
-
--- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
-
 -- AddForeignKey
 ALTER TABLE "Batch" ADD CONSTRAINT "Batch_templateID_fkey" FOREIGN KEY ("templateID") REFERENCES "Template"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
