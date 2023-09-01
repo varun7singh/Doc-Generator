@@ -12,6 +12,7 @@ import { RenderModule } from 'templater';
 import { GeneratorModule } from './generator/generator.module';
 import { TemplateModule } from './template/template.module';
 import { SharedModule } from './shared/shared.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { SharedModule } from './shared/shared.module';
     RenderModule,
     GeneratorModule,
     TemplateModule,
+    AuthModule,
   ],
   controllers: [AppController, HealthController],
   providers: [AppService, PrismaService, PrismaHealthIndicator],

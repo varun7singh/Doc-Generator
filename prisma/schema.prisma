@@ -51,12 +51,12 @@ model Batch {
 }
 
 model User {
-  id         Int    @id @default(autoincrement())
-  username   String @unique
-  firstName  String
-  lastName   String
-  email      String @unique
-  password   String
-  phone      String
-  userStatus Int
+  id         Int     @id @default(autoincrement())
+  email      String  @unique
+  userStatus Int     @default(1)
+  firstName  String?
+  lastName   String?
+  phone      String?
+  username   String? @unique
+  profileImg String?
 }
