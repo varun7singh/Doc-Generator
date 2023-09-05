@@ -14,17 +14,21 @@ async function bootstrap() {
     new FastifyAdapter(),
     { cors: true },
   );
-  app.connectMicroservice({
-    transport: Transport.RMQ,
-    options: {
-      urls: [process.env.RMQ_URL],
-      queue: process.env.RMQ_QUEUE,
-      noAck: false,
-      queueOptions: {
-        durable: process.env.RMQ_QUEUE_DURABLE === 'true' ? true : false,
+  try {
+    app.connectMicroservice({
+      transport: Transport.RMQ,
+      options: {
+        urls: [process.env.RMQ_URL],
+        queue: process.env.RMQ_QUEUE,
+        noAck: false,
+        queueOptions: {
+          durable: process.env.RMQ_QUEUE_DURABLE === 'true' ? true : false,
+        },
       },
-    },
-  });
+    });
+  } catch (error) {
+    console.log(error);
+  }
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
 
@@ -36,7 +40,11 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
 
-  await app.startAllMicroservices();
+  try {
+    await app.startAllMicroservices();
+  } catch (error) {
+    console.log(error);
+  }
   await app.listen(3000, '0.0.0.0');
   console.log(
     `Application is running on: ${await app.getUrl()}/${globalPrefix}`,
