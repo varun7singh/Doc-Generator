@@ -11,7 +11,6 @@ import { PrismaModule } from './prisma/prisma.module';
 import { RenderModule } from 'templater';
 import { GeneratorModule } from './generator/generator.module';
 import { TemplateModule } from './template/template.module';
-import { SharedModule } from './shared/shared.module';
 import { AuthModule } from './auth/auth.module';
 
 @Module({
@@ -19,7 +18,6 @@ import { AuthModule } from './auth/auth.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    SharedModule,
     HttpModule,
     TerminusModule,
     PrismaModule,

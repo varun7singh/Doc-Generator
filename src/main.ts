@@ -1,6 +1,4 @@
-import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { Transport } from '@nestjs/microservices';
 import {
   FastifyAdapter,
   NestFastifyApplication,
@@ -25,11 +23,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
 
-  try {
-    await app.startAllMicroservices();
-  } catch (error) {
-    console.log(error);
-  }
   await app.listen(3000, '0.0.0.0');
   console.log(
     `Application is running on: ${await app.getUrl()}/${globalPrefix}`,

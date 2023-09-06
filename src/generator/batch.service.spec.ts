@@ -82,67 +82,6 @@ describe('BatchService', () => {
     });
   });
 
-  describe('createBatchAndEnqueue', () => {
-    it('should create batch and enqueue message', async () => {
-      // Mock PrismaService findUnique method
-      const mockTemplateID = 1;
-      const mockTemplate = {
-        id: mockTemplateID,
-        templateType: 'JSTL',
-        content: '${content}',
-      };
-      const mockPayload = [
-        {
-          content: 'content',
-        },
-      ];
-      jest
-        .spyOn(prismaService.template, 'findUnique')
-        .mockResolvedValue(mockTemplate as any);
-
-      // Mock PrismaService create method
-      const mockBatch = {
-        id: 'batch_id',
-        payload: mockPayload,
-        template: { id: mockTemplateID },
-      };
-      jest.spyOn(prismaService.batch, 'create').mockResolvedValue(mockBatch);
-
-      // Mock ClientProxy emit method
-      const mockEmit = jest
-        .spyOn(batchProcessingClient, 'emit')
-        .mockImplementation();
-
-      // Call the method and verify
-      const result = await batchService.createBatchAndEnqueue({
-        templateID: mockTemplateID,
-        payload: mockPayload,
-        templateType: 'JSTL',
-      });
-
-      // Verify Prisma calls
-      expect(prismaService.template.findUnique).toHaveBeenCalledWith({
-        where: { id: mockTemplateID },
-      });
-
-      expect(prismaService.batch.create).toHaveBeenCalledWith({
-        data: {
-          id: expect.any(String),
-          payload: mockPayload,
-          template: { connect: { id: mockTemplateID } },
-        },
-        include: { template: true },
-      });
-
-      // Verify RabbitMQ operation
-      expect(batchProcessingClient.emit).toHaveBeenCalledWith('process-batch', {
-        batchId: expect.any(String),
-      });
-
-      expect(result).toEqual(mockBatch);
-    });
-  });
-
   describe('getBatch', () => {
     it('should throw error when batch not found', async () => {
       jest.spyOn(prismaService.batch, 'findUnique').mockResolvedValue(null);
