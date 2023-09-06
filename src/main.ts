@@ -14,21 +14,6 @@ async function bootstrap() {
     new FastifyAdapter(),
     { cors: true },
   );
-  try {
-    app.connectMicroservice({
-      transport: Transport.RMQ,
-      options: {
-        urls: [process.env.RMQ_URL],
-        queue: process.env.RMQ_QUEUE,
-        noAck: false,
-        queueOptions: {
-          durable: process.env.RMQ_QUEUE_DURABLE === 'true' ? true : false,
-        },
-      },
-    });
-  } catch (error) {
-    console.log(error);
-  }
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
 

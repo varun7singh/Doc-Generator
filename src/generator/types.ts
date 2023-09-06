@@ -46,9 +46,11 @@ export class BatchRequest {
   @ApiProperty({
     description: 'Data to be rendered in json format',
     type: Object,
-    example: {
-      variable_name: 'variable_value',
-    },
+    example: [
+      {
+        variable_name: 'variable_value',
+      },
+    ],
   })
   payload: any[];
 }

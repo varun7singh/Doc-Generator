@@ -4,12 +4,6 @@ import { BatchRequest, BatchResponse, GenRequest, GenResponse } from './types';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BatchService } from './batch.service';
 import { Batch } from '@prisma/client';
-import {
-  Ctx,
-  MessagePattern,
-  Payload,
-  RmqContext,
-} from '@nestjs/microservices';
 
 @Controller('generate')
 @ApiTags('generator')
@@ -18,23 +12,6 @@ export class GeneratorController {
     private readonly generateService: GeneratorService,
     private readonly batchService: BatchService,
   ) {}
-
-  @MessagePattern('process-batch')
-  async processBatch(
-    @Payload() data: { batchId: string },
-    @Ctx() ctx: RmqContext,
-  ) {
-    const channel = ctx.getChannelRef();
-    const originalMsg = ctx.getMessage();
-    try {
-      // simulating processing time
-      // await new Promise((resolve) => setTimeout(resolve, 5000));
-      await this.batchService.processBatch(data.batchId);
-      await channel.ack(originalMsg);
-    } catch (error: any) {
-      throw new Error(error);
-    }
-  }
 
   @Post('/render')
   @ApiOperation({ summary: 'For realtime rendering of templates' })

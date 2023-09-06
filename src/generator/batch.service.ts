@@ -1,16 +1,13 @@
-import { HttpException, Inject, Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { Batch, BatchStatus, OutputType } from '@prisma/client';
 import { BatchRequest } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import { PrismaService } from '../prisma/prisma.service';
-import { ClientProxy } from '@nestjs/microservices';
 import { RenderService } from 'templater';
 
 @Injectable()
 export class BatchService {
   constructor(
-    @Inject('BATCH_PROCESSING')
-    private readonly batchProcessingClient: ClientProxy,
     private readonly prisma: PrismaService,
     private readonly renderService: RenderService,
   ) {}
@@ -62,7 +59,8 @@ export class BatchService {
     if (!batch) {
       throw new HttpException(`Batch not found with ID: ${uid}`, 404);
     }
-    await new Promise((resolve) => setTimeout(resolve, 10000));
+    // timeout for mocking processing time
+    // await new Promise((resolve) => setTimeout(resolve, 10000));
     const { template, payload, outputType } = batch;
     const { templateType, content } = template;
     const output: string[] = [];
@@ -134,10 +132,14 @@ export class BatchService {
         template: true,
       },
     });
-    await this.batchProcessingClient.emit('process-batch', {
-      batchId: batchId,
+    // This is just a sample implementation of how the batch will be processed in the background testing the renderService
+    await this.processBatch(batchId);
+    const updatedBatch = await this.prisma.batch.findUnique({
+      where: {
+        id: batchId,
+      },
     });
-    return batch;
+    return updatedBatch;
   }
 
   async getBatch(id: string): Promise<Batch> {
